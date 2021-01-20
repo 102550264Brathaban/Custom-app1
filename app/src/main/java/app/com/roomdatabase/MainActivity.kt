@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val shopViewModel = ViewModelProvider(this).get(ShopViewModel::class.java)
-
+///
 
         val inputTex = findViewById<TextInputEditText>(R.id.textInputEditText)
         val tex      = findViewById<TextView>(R.id.textView3)
