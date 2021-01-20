@@ -1,0 +1,63 @@
+package app.com.roomdatabase
+
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import android.util.Log
+import androidx.room.Database
+import androidx.room.Room
+import java.util.concurrent.Executor
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
+
+class MainActivity : AppCompatActivity() {
+
+    val background : ExecutorService = Executors.newFixedThreadPool(2)
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+
+    val db = Room.databaseBuilder(applicationContext,AppDb::class.java,"Shopping")
+        .fallbackToDestructiveMigration()
+        .build()
+    val shop = Shopping()
+    shop.IsBigSale = false
+    shop.amount =3
+    shop.name = "lentil"
+
+
+
+    val shop1 = Shopping()
+    shop1.IsBigSale = false
+    shop1.amount =7
+    shop1.name = "lentil3"
+
+SaveData(db,shop,shop1)
+ShowData(db)
+
+
+
+        }
+
+    private fun ShowData(db : AppDb) {
+        background.submit() {
+            db.ShopDao().ShowShopping().forEach {
+                Log.i("Brath", "${it.name}")
+                Log.i("Brath", "${it.amount}")
+                Log.i("Brath", "${it.IsBigSale}")
+
+            }
+        }
+
+}
+    private fun SaveData(db : AppDb,shop : Shopping,shop1 : Shopping)
+    {
+        background.submit(){
+            //db.ShopDao().DeleteAll()
+            db.ShopDao().SaveShopping(shop)
+            db.ShopDao().SaveShopping(shop1)
+        }
+    }
+
+}
